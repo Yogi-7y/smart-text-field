@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Move out from mono repo to a dedicated repository.
+
 ## 1.0.4
 
 - Introduce `plainText` in `SmartTextFieldController` to get the plain text without tokens.
