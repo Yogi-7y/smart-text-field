@@ -7,16 +7,18 @@ import 'package:smart_textfield/src/module/domain/use_case/smart_textfield_use_c
 import '../entity/tokenizer_test.dart';
 
 void main() {
-  late final _systemUnderTest = SmartTextFieldUseCase(tokenizers: [
-    ProjectTokenizer(
-      values: const [
-        Project(name: 'Foo bar'),
-        Project(name: 'John Doe'),
-        Project(name: 'Jane Doe'),
-        Project(name: 'Baz qux'),
-      ],
-    )
-  ]);
+  late final _systemUnderTest = SmartTextFieldUseCase(
+    tokenizers: [
+      ProjectTokenizer(
+        values: const [
+          Project(name: 'Foo bar'),
+          Project(name: 'John Doe'),
+          Project(name: 'Jane Doe'),
+          Project(name: 'Baz qux'),
+        ],
+      )
+    ],
+  );
 
   test(
     'Do foo today at noon',

@@ -101,7 +101,7 @@ void main() {
 class ProjectTokenizer extends Tokenizer<Project> {
   ProjectTokenizer({
     required super.values,
-    super.prefix = '@',
+    super.something = '@',
   });
 }
 

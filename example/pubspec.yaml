@@ -18,7 +18,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   lints_y:
-    path: ../../lints_y
+    path: ../../project_y/packages/lints
 
 flutter:
   uses-material-design: true

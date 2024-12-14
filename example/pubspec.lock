@@ -78,7 +78,7 @@ packages:
   lints_y:
     dependency: "direct dev"
     description:
-      path: "../../lints_y"
+      path: "../../project_y/packages/lints"
       relative: true
     source: path
     version: "0.0.1"
@@ -125,7 +125,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.5"
   source_span:
     dependency: transitive
     description:

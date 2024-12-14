@@ -112,11 +112,11 @@ void main() {
 }
 
 class TokenizerA extends Tokenizer<Project> {
-  TokenizerA({super.prefix = '@', required super.values});
+  TokenizerA({super.something = '@', required super.values});
 }
 
 class TokenizerB extends Tokenizer {
-  TokenizerB({required super.prefix, required super.values});
+  TokenizerB({required super.something, required super.values});
 }
 
 class Project implements Tokenable {
