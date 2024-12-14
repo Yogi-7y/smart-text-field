@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import 'tokenable.dart';
+
 /// Represents the extracted value form the input text.
 @immutable
 class Token<T extends Tokenable> {
@@ -36,9 +38,8 @@ class Token<T extends Tokenable> {
   final String prefix;
 
   @override
-  String toString() {
-    return 'Token(rawValue: $rawValue, displayValue: $displayValue, value: $value, offset: $offset, isHighlighted: $isHighlighted, prefix: $prefix)';
-  }
+  String toString() =>
+      'Token(rawValue: $rawValue, displayValue: $displayValue, value: $value, offset: $offset, isHighlighted: $isHighlighted, prefix: $prefix)';
 
   @override
   bool operator ==(covariant Token<T> other) {
@@ -53,14 +54,13 @@ class Token<T extends Tokenable> {
   }
 
   @override
-  int get hashCode {
-    return rawValue.hashCode ^
-        displayValue.hashCode ^
-        value.hashCode ^
-        offset.hashCode ^
-        isHighlighted.hashCode ^
-        prefix.hashCode;
-  }
+  int get hashCode =>
+      rawValue.hashCode ^
+      displayValue.hashCode ^
+      value.hashCode ^
+      offset.hashCode ^
+      isHighlighted.hashCode ^
+      prefix.hashCode;
 }
 
 @immutable
@@ -85,16 +85,4 @@ class TokenOffset {
 
   @override
   int get hashCode => start.hashCode ^ end.hashCode;
-}
-
-@immutable
-abstract class Tokenable {
-  const Tokenable({
-    required this.stringValue,
-    required this.prefix,
-  });
-
-  final String stringValue;
-
-  final String prefix;
 }

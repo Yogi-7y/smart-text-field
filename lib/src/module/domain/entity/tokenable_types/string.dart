@@ -1,7 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'token.dart';
+import 'package:flutter/foundation.dart';
 
-// ignore: avoid_implementing_value_types
+import '../tokenable.dart';
+
+@immutable
 class TokenableString implements Tokenable {
   const TokenableString(this.value);
 
