@@ -38,19 +38,16 @@ class Token<T extends Tokenable> {
   final String prefix;
 
   @override
-  String toString() =>
-      'Token(rawValue: $rawValue, displayValue: $displayValue, value: $value, offset: $offset, isHighlighted: $isHighlighted, prefix: $prefix)';
-
-  @override
-  bool operator ==(covariant Token<T> other) {
-    if (identical(this, other)) return true;
-
-    return other.rawValue == rawValue &&
-        other.displayValue == displayValue &&
-        other.value == value &&
-        other.offset == offset &&
-        other.isHighlighted == isHighlighted &&
-        other.prefix == prefix;
+  String toString() {
+    final buffer = StringBuffer('Token(')
+      ..writeln('rawValue: $rawValue')
+      ..writeln('displayValue: $displayValue')
+      ..writeln('value: $value')
+      ..writeln('offset: $offset')
+      ..writeln('isHighlighted: $isHighlighted')
+      ..writeln('prefix: $prefix')
+      ..write(')');
+    return buffer.toString();
   }
 
   @override
@@ -61,6 +58,19 @@ class Token<T extends Tokenable> {
       offset.hashCode ^
       isHighlighted.hashCode ^
       prefix.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Token<T> &&
+        other.rawValue == rawValue &&
+        other.displayValue == displayValue &&
+        other.value == value &&
+        other.offset == offset &&
+        other.isHighlighted == isHighlighted &&
+        other.prefix == prefix;
+  }
 }
 
 @immutable
@@ -74,7 +84,13 @@ class TokenOffset {
   final int end;
 
   @override
-  String toString() => 'TokenOffset(start: $start, end: $end)';
+  String toString() {
+    final buffer = StringBuffer('TokenOffset(')
+      ..write('start: $start, ')
+      ..write('end: $end')
+      ..write(')');
+    return buffer.toString();
+  }
 
   @override
   bool operator ==(covariant TokenOffset other) {
