@@ -32,8 +32,6 @@ class SmartTextField extends StatefulWidget {
 }
 
 class _SmartTextFieldState extends State<SmartTextField> {
-  // late final _globalKey = GlobalKey<FormState>();
-
   String query = '';
   int currentModifier = -1;
 
