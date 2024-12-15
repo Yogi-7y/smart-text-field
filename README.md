@@ -38,16 +38,12 @@ class Project implements Tokenable {
   @override
   String get stringValue => name;
 }
-
-class ProjectTokenizer extends Tokenizer<Project> {
   ProjectTokenizer({
     required super.values,
     super.prefix = prefixId,
   });
 
   static const prefixId = '@';
-}
-
 const _projects = <Project>[
   Project(name: 'Run a marathon'),
   Project(name: 'Learn to code'),
@@ -70,12 +66,22 @@ final _controller = SmartTextFieldController(
 
 return SmartTextField(
   controller: _controller,
-  decoration: InputDecoration(
-    hintText: 'Enter your task...',
+  textFormFieldBuilder: (context, controller) => TextFormField(
+    controller: controller,
+    decoration: const InputDecoration(
+      hintText: 'Enter your task...',
+    ),
+  ),
+  // Optional: Customize how suggestions appear
+  suggestionItemBuilder: (context, suggestion) => ListTile(
+    title: Text(suggestion),
+    leading: const Icon(Icons.task),
   ),
 );
 
 ```
+
+> The controller passed to the `TextFormField` in `textFormFieldBuilder` must be the same instance as the one passed to the `SmartTextField` widget. This is to ensure proper synchronization.
 
 Ensure that the root of your app is wrapped with `SmartTextFieldOverlay` to display the overlay of suggestions.
 
