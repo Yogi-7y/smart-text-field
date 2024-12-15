@@ -81,7 +81,7 @@ return SmartTextField(
 
 ```
 
-> The controller passed to the `TextFormField` in `textFormFieldBuilder` must be the same instance as the one passed to the `SmartTextField` widget. This is to ensure proper synchronization.
+> ⚠️ Important: Always use the controller provided by the textFieldBuilder function in your TextFormField. The builder receives the same controller instance that was passed to SmartTextField, ensuring proper synchronization.
 
 Ensure that the root of your app is wrapped with `SmartTextFieldOverlay` to display the overlay of suggestions.
 
