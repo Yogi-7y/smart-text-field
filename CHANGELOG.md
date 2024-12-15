@@ -1,3 +1,7 @@
+## 1.1.0
+
+- Remove dependency from `TextFormField` and take it as a parameter via `textFormFieldBuilder` property. [#1](https://github.com/Yogi-7y/smart-text-field/pull/1)
+
 ## 1.0.5
 
 - Move out from mono repo to a dedicated repository.
