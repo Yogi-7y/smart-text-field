@@ -91,10 +91,13 @@ class _SmartTextFieldScreenState extends State<SmartTextFieldScreen> {
           children: [
             SmartTextField(
               controller: _controller,
-              autofocus: true,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+              textFormFieldBuilder: (context, controller) => TextFormField(
+                controller: controller,
+                autofocus: true,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
               ),
               suggestionItemBuilder: (context, suggestion) => ListTile(
