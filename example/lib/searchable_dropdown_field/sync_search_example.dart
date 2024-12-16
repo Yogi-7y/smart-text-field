@@ -1,26 +1,22 @@
-// Search Provider
 import 'package:flutter/material.dart';
 import 'package:smart_textfield/smart_textfield.dart';
 
-void main() {
-  runApp(
-    const SmartTextFieldOverlay(
-      child: MaterialApp(
-        home: HomeScreen(),
-      ),
-    ),
-  );
-}
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class SyncSearchExample extends StatefulWidget {
+  const SyncSearchExample({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SyncSearchExample> createState() => _SyncSearchExampleState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SyncSearchExampleState extends State<SyncSearchExample> {
   late final _controller = TextEditingController();
+
+  final _sources = <SearchSource>[
+    SearchSource(
+      provider: CountrySearchProvider(items: countries),
+      renderer: CountrySearchRenderer(),
+    ),
+  ];
 
   @override
   void dispose() {
@@ -30,26 +26,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SearchableDropdownField(
-                controller: _controller,
-                sources: _sources,
-                textFormFieldBuilder: (context, controller) => TextFormField(
-                  controller: controller,
-                  decoration: const InputDecoration(
-                    hintText: 'Search',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-            ],
-          ),
+    return SearchableDropdownField(
+      controller: _controller,
+      sources: _sources,
+      textFormFieldBuilder: (context, controller) => TextFormField(
+        controller: controller,
+        decoration: const InputDecoration(
+          hintText: 'Search',
+          border: OutlineInputBorder(),
         ),
       ),
     );
@@ -149,12 +133,5 @@ final countries = [
     code: 'JP',
     shortName: 'JPN',
     gmtOffset: 9,
-  ),
-];
-
-final _sources = <SearchSource>[
-  SearchSource(
-    provider: CountrySearchProvider(items: countries),
-    renderer: CountrySearchRenderer(),
   ),
 ];

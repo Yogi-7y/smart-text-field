@@ -104,9 +104,11 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
             constraints: const BoxConstraints(
               maxHeight: 300,
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: _searchResultsNotifier.widgets,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: _searchResultsNotifier.widgets,
+              ),
             ),
           ),
         ),

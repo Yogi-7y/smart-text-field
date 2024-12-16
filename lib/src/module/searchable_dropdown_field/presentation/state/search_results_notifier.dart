@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../../../../smart_textfield.dart';
@@ -29,7 +31,15 @@ class SearchResultsNotifier extends ChangeNotifier {
             .toList();
 
         _widgets.addAll(_result);
-      } else {}
+      } else if (_provider is AsyncSearchProvider) {
+        final _providerResults = await _provider.search(query);
+
+        final _result = _providerResults
+            .map((item) => _renderer.render(context, item)) //
+            .toList();
+
+        _widgets.addAll(_result);
+      }
     }
 
     notifyListeners();
