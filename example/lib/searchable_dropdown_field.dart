@@ -1,10 +1,98 @@
-import 'package:flutter/material.dart';
-import 'package:smart_textfield/src/module/searchable_dropdown_field/domain/entity/searchable.dart';
-import 'package:smart_textfield/src/module/searchable_dropdown_field/domain/use_case/sync_search_provider.dart';
-import 'package:smart_textfield/src/module/searchable_dropdown_field/presentation/models/search_renderer.dart';
-import 'package:smart_textfield/src/module/searchable_dropdown_field/presentation/models/search_source.dart';
-
 // Search Provider
+import 'package:flutter/material.dart';
+import 'package:smart_textfield/smart_textfield.dart';
+
+void main() {
+  runApp(
+    const SmartTextFieldOverlay(
+      child: MaterialApp(
+        home: HomeScreen(),
+      ),
+    ),
+  );
+}
+
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SearchableDropdownField(
+                controller: _controller,
+                sources: _sources,
+                textFormFieldBuilder: (context, controller) => TextFormField(
+                  controller: controller,
+                  decoration: const InputDecoration(
+                    hintText: 'Search',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CountrySearchRenderer extends SearchRenderer<Country> {
+  @override
+  Widget render(BuildContext context, Country item) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${item.shortName} • ${item.code}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            Text(
+              item.gmtString,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+          ],
+        ),
+      );
+}
+
 class CountrySearchProvider extends SyncSearchProvider<Country> {
   CountrySearchProvider({required super.items});
 
@@ -17,87 +105,17 @@ class CountrySearchProvider extends SyncSearchProvider<Country> {
   }
 }
 
-// Search Renderer
-class CountrySearchRenderer extends SearchRenderer<Country> {
-  @override
-  Widget render(BuildContext context, Country item) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.name,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${item.shortName} • ${item.code}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            item.gmtString,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-void main() {
-  final searchSource = SearchSource<Country>(
-    provider: CountrySearchProvider(items: countries),
-    renderer: CountrySearchRenderer(),
-  );
-
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SearchableDropdownField<Country>(
-              source: searchSource,
-              onSelected: (country) {
-                print('Selected: ${country.name}');
-              },
-              decoration: const InputDecoration(
-                labelText: 'Select Country',
-                hintText: 'Search by name, code or short name',
-              ),
-            ),
-          ),
-        ),
-      ),
-    ),
-  );
-}
-
 class Country implements Searchable {
-  final String name;
-  final String code;
-  final String shortName;
-  final double gmtOffset;
-
   const Country({
     required this.name,
     required this.code,
     required this.shortName,
     required this.gmtOffset,
   });
+  final String name;
+  final String code;
+  final String shortName;
+  final double gmtOffset;
 
   String get gmtString {
     final hours = gmtOffset.toInt();
@@ -108,6 +126,12 @@ class Country implements Searchable {
 }
 
 final countries = [
+  const Country(
+    name: 'India',
+    code: 'IN',
+    shortName: 'IND',
+    gmtOffset: 5.5,
+  ),
   const Country(
     name: 'United States',
     code: 'US',
@@ -126,10 +150,11 @@ final countries = [
     shortName: 'JPN',
     gmtOffset: 9,
   ),
-  const Country(
-    name: 'India',
-    code: 'IN',
-    shortName: 'IND',
-    gmtOffset: 5.5,
+];
+
+final _sources = <SearchSource>[
+  SearchSource(
+    provider: CountrySearchProvider(items: countries),
+    renderer: CountrySearchRenderer(),
   ),
 ];
