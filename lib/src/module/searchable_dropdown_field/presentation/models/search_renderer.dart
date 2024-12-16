@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entity/searchable.dart';
+import '../../domain/use_case/search_provider.dart';
 
 /// Renderer class for a given [SearchProvider].
 /// Usually mapped with a [SearchProvider] and passed in the [SearchSource]

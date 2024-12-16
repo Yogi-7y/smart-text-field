@@ -3,7 +3,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import '../../../smart_textfield.dart';
+import '../domain/entity/selection_menu.dart';
 import '../domain/use_case/smart_textfield_use_case.dart';
 
 typedef Offset = ({int start, int end});

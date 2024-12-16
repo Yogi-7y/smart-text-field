@@ -1,4 +1,4 @@
-export 'src/module/searchable_dropdown_field/searchable_dropdown_field.dart';
+export 'src/module/searchable_dropdown_field/export.dart';
 export 'src/module/smart_textfield/domain/entity/selection_menu.dart';
 export 'src/module/smart_textfield/domain/entity/token.dart';
 export 'src/module/smart_textfield/domain/entity/tokenable.dart';
