@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 
 import '../../../../smart_textfield.dart';
+import 'state/query_notifier.dart';
+import 'state/search_results_notifier.dart';
 
 typedef SearchSources = List<SearchSource>;
 typedef TextFormFieldBuilder = TextFormField Function(
@@ -30,6 +32,11 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
   final _textFormFieldKey = GlobalKey(debugLabel: 'SearchableDropdownField');
   var _textFormFieldWidth = 0.0;
 
+  late final _queryNotifier = QueryNotifier();
+  late final _searchResultsNotifier = SearchResultsNotifier(
+    sources: widget.sources,
+  );
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +51,16 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getTextFormFieldWidth();
+      _syncTextControllerAndQueryNotifier();
+      _syncQueryAndSearchResults();
     });
+  }
+
+  @override
+  void dispose() {
+    _queryNotifier.dispose();
+    _searchResultsNotifier.dispose();
+    super.dispose();
   }
 
   void _getTextFormFieldWidth() {
@@ -52,6 +68,19 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
     if (_renderBox == null) return;
     _textFormFieldWidth = _renderBox.paintBounds.size.width;
     setState(() {});
+  }
+
+  void _syncTextControllerAndQueryNotifier() => widget.controller.addListener(
+        () => _queryNotifier.updateQuery = widget.controller.text,
+      );
+
+  void _syncQueryAndSearchResults() {
+    _queryNotifier.addListener(
+      () async {
+        final _query = _queryNotifier.value;
+        await _searchResultsNotifier.search(context, _query);
+      },
+    );
   }
 
   @override
@@ -66,11 +95,19 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
         follower: Alignment.bottomRight,
         target: Alignment.topRight,
       ),
-      portalFollower: UnconstrainedBox(
-        child: Container(
-          width: _textFormFieldWidth,
-          constraints: const BoxConstraints(
-            maxHeight: 300,
+      portalFollower: ListenableBuilder(
+        listenable: _searchResultsNotifier,
+        builder: (context, child) => UnconstrainedBox(
+          child: Container(
+            color: Colors.red,
+            width: _textFormFieldWidth,
+            constraints: const BoxConstraints(
+              maxHeight: 300,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: _searchResultsNotifier.widgets,
+            ),
           ),
         ),
       ),
