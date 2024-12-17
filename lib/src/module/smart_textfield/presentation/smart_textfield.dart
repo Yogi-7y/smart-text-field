@@ -6,7 +6,7 @@ import 'smart_text_field_controller.dart';
 typedef SuggestionItemBuilder = Widget Function(BuildContext context, String suggestion);
 
 /// Pass in the [TextFormField] over which the suggestions will be shown.
-typedef TextFormFieldBuilder = TextFormField Function(
+typedef SmartTextFormFieldBuilder = TextFormField Function(
   BuildContext context,
   SmartTextFieldController controller,
 );
@@ -25,7 +25,7 @@ class SmartTextField extends StatefulWidget {
   final SuggestionItemBuilder? suggestionItemBuilder;
 
   /// Pass in the [TextFormField] over which the suggestions will be shown.
-  final TextFormFieldBuilder textFormFieldBuilder;
+  final SmartTextFormFieldBuilder textFormFieldBuilder;
 
   @override
   State<SmartTextField> createState() => _SmartTextFieldState();

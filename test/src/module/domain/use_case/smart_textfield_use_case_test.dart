@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smart_textfield/src/module/domain/entity/parser_return_type.dart';
-import 'package:smart_textfield/src/module/domain/entity/token.dart';
-import 'package:smart_textfield/src/module/domain/entity/token_types.dart';
-import 'package:smart_textfield/src/module/domain/use_case/smart_textfield_use_case.dart';
+import 'package:smart_textfield/smart_textfield.dart';
+import 'package:smart_textfield/src/module/smart_textfield/domain/entity/parser_return_type.dart';
+import 'package:smart_textfield/src/module/smart_textfield/domain/entity/tokenable_types/date_time.dart';
+import 'package:smart_textfield/src/module/smart_textfield/domain/entity/tokenable_types/string.dart';
+import 'package:smart_textfield/src/module/smart_textfield/domain/use_case/smart_textfield_use_case.dart';
 
 import '../entity/tokenizer_test.dart';
 

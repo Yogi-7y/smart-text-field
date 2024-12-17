@@ -1,4 +1,5 @@
 import 'token.dart';
+import 'tokenable.dart';
 
 /// [Tokenizer] is a class responsible for extracting specific values from user input
 /// based on predefined patterns and presenting a list of possible values to the user.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smart_textfield/src/module/domain/use_case/parsers/time_parser.dart';
+import 'package:smart_textfield/src/module/smart_textfield/domain/use_case/parsers/time_parser.dart';
 
 void main() {
   group(

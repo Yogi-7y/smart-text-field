@@ -1,7 +1,6 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:smart_textfield/src/module/domain/entity/token.dart';
-import 'package:smart_textfield/src/module/domain/entity/tokenizer.dart';
+import 'package:smart_textfield/smart_textfield.dart';
 
 void main() {
   late ProjectTokenizer projectTokenizer;
@@ -101,7 +100,7 @@ void main() {
 class ProjectTokenizer extends Tokenizer<Project> {
   ProjectTokenizer({
     required super.values,
-    super.something = '@',
+    super.prefix = '@',
   });
 }
 
