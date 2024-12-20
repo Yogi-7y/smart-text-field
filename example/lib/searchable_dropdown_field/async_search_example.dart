@@ -12,31 +12,15 @@ class AsyncSearchExample extends StatefulWidget {
 }
 
 class _AsyncSearchExampleState extends State<AsyncSearchExample> {
-  late final _controller = TextEditingController();
-
   final _searchSource = SearchSource<Package>(
     provider: PubPackageSearchProvider(),
     renderer: PackageSearchRenderer(),
   );
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SearchableDropdownField(
       sources: [_searchSource],
-      controller: _controller,
-      textFormFieldBuilder: (context, controller) => TextFormField(
-        controller: controller,
-        decoration: const InputDecoration(
-          hintText: 'Search pub.dev packages...',
-          prefixIcon: Icon(Icons.search),
-        ),
-      ),
     );
   }
 }
@@ -100,4 +84,7 @@ class Package implements Searchable {
 
   @override
   int get hashCode => name.hashCode;
+
+  @override
+  String get stringifiedValue => name;
 }

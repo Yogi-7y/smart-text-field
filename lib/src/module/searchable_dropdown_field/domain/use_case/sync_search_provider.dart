@@ -19,7 +19,7 @@ abstract class SyncSearchProvider<T extends Searchable> extends SearchProvider<T
   bool query({required Query text, required T item});
 
   @override
-  SearchResults<Searchable> search(Query text) {
+  SearchResults<T> search(Query text) {
     if (text.isEmpty) return items;
     return items.where((item) => query(text: text, item: item)).toList();
   }

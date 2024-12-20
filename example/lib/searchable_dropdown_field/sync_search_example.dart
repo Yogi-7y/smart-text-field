@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:smart_textfield/smart_textfield.dart';
 
+import 'searchable_dropdown_field.dart';
+
 class SyncSearchExample extends StatefulWidget {
-  const SyncSearchExample({super.key});
+  const SyncSearchExample({required this.data, super.key});
+
+  final SearchableDropdownFieldData data;
 
   @override
   State<SyncSearchExample> createState() => _SyncSearchExampleState();
 }
 
 class _SyncSearchExampleState extends State<SyncSearchExample> {
-  late final _controller = TextEditingController();
-
   final _sources = <SearchSource>[
     SearchSource(
       provider: CountrySearchProvider(items: countries),
@@ -19,62 +21,58 @@ class _SyncSearchExampleState extends State<SyncSearchExample> {
   ];
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SearchableDropdownField(
-      controller: _controller,
       sources: _sources,
-      textFormFieldBuilder: (context, controller) => TextFormField(
-        controller: controller,
-        decoration: const InputDecoration(
-          hintText: 'Search',
-          border: OutlineInputBorder(),
-        ),
-      ),
+      searchableDropdownFieldData: widget.data,
     );
   }
 }
 
 class CountrySearchRenderer extends SearchRenderer<Country> {
   @override
-  Widget render(BuildContext context, Country item) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${item.shortName} • ${item.code}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context).colorScheme.secondary,
-                        ),
-                  ),
-                ],
-              ),
+  Widget render(BuildContext context, Country item) {
+    const titleStyle = TextStyle(
+      fontSize: 16,
+      color: textPrimaryColor,
+      fontWeight: FontWeight.w500,
+    );
+
+    const subtitleStyle = TextStyle(
+      fontSize: 14,
+      color: textSecondaryColor,
+      fontWeight: FontWeight.w500,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  style: titleStyle,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  '${item.shortName} • ${item.code}',
+                  style: subtitleStyle,
+                ),
+              ],
             ),
-            Text(
-              item.gmtString,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-            ),
-          ],
-        ),
-      );
+          ),
+          Text(
+            item.gmtString,
+            style: subtitleStyle,
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class CountrySearchProvider extends SyncSearchProvider<Country> {
@@ -107,6 +105,9 @@ class Country implements Searchable {
     final sign = gmtOffset >= 0 ? '+' : '-';
     return 'GMT$sign${hours.abs().toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
   }
+
+  @override
+  String get stringifiedValue => name;
 }
 
 final countries = [

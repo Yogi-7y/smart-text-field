@@ -10,5 +10,5 @@ abstract class AsyncSearchProvider<T extends Searchable> extends SearchProvider<
   Future<SearchResults<T>> query(Query text);
 
   @override
-  Future<SearchResults<Searchable>> search(Query text) => query(text);
+  Future<SearchResults<T>> search(Query text) => query(text);
 }

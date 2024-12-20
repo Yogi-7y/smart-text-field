@@ -5,39 +5,39 @@ import '../../../../smart_textfield.dart';
 import 'state/query_notifier.dart';
 import 'state/search_results_notifier.dart';
 
-typedef SearchSources = List<SearchSource>;
+typedef SearchSources<T extends Searchable> = List<SearchSource<T>>;
 
-@immutable
 class SearchableDropdownField<T extends Searchable> extends StatefulWidget {
-  const SearchableDropdownField({
+  SearchableDropdownField({
     required this.sources,
     this.initialValue,
+    SearchableDropdownFieldData? searchableDropdownFieldData,
     super.key,
-  });
+  }) : data = searchableDropdownFieldData ?? SearchableDropdownFieldData();
 
-  final SearchSources sources;
+  final SearchSources<T> sources;
   final T? initialValue;
+  final SearchableDropdownFieldData data;
 
   @override
-  State<SearchableDropdownField> createState() => _SearchableDropdownFieldState();
+  State<SearchableDropdownField<T>> createState() => _SearchableDropdownFieldState<T>();
 }
 
-class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
+class _SearchableDropdownFieldState<T extends Searchable>
+    extends State<SearchableDropdownField<T>> {
   final _textFormFieldKey = GlobalKey(debugLabel: 'SearchableDropdownField');
   var _textFormFieldWidth = 0.0;
 
-  late final _textController = TextEditingController();
-
   late final _queryNotifier = QueryNotifier();
-  late final _searchResultsNotifier = SearchResultsNotifier(
-    sources: widget.sources,
-  );
+  late final _textController = TextEditingController();
+  late final _foucsNode = FocusNode();
 
-  bool _isOverlayVisible = false;
-  void _changeOverlayStatus(bool isVisible) {
-    if (_isOverlayVisible == isVisible) return;
-    setState(() => _isOverlayVisible = isVisible);
-  }
+  late final _searchResultsNotifier = SearchResultsNotifier<T>(
+    sources: widget.sources,
+    textController: _textController,
+    queryNotifier: _queryNotifier,
+    focusNode: _foucsNode,
+  );
 
   @override
   void initState() {
@@ -45,16 +45,15 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getTextFormFieldWidth();
-      _syncTextAndQuery();
-      _syncQueryAndSearchResults();
     });
   }
 
   @override
   void dispose() {
-    _textController.dispose();
-    _queryNotifier.dispose();
     _searchResultsNotifier.dispose();
+    _textController.dispose();
+    _foucsNode.dispose();
+    _queryNotifier.dispose();
     super.dispose();
   }
 
@@ -67,22 +66,6 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
     setState(() {});
   }
 
-  void _syncTextAndQuery() {
-    _textController.addListener(() {
-      _queryNotifier.value = _textController.text;
-      if (!_isOverlayVisible) _changeOverlayStatus(true);
-    });
-  }
-
-  void _syncQueryAndSearchResults() {
-    _queryNotifier.addListener(
-      () async {
-        final _query = _queryNotifier.value;
-        await _searchResultsNotifier.search(context, _query);
-      },
-    );
-  }
-
   @override
   void setState(VoidCallback fn) {
     if (mounted) super.setState(fn);
@@ -90,23 +73,29 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
 
   @override
   Widget build(BuildContext context) {
+    final _data = widget.data;
+
     return PortalTarget(
-      visible: _isOverlayVisible,
+      visible: _searchResultsNotifier.isSuggestionsVisible,
       portalFollower: GestureDetector(
-        behavior: _isOverlayVisible ? HitTestBehavior.opaque : HitTestBehavior.deferToChild,
-        onTap: () => _changeOverlayStatus(false),
+        behavior: _searchResultsNotifier.isSuggestionsVisible
+            ? HitTestBehavior.opaque
+            : HitTestBehavior.deferToChild,
+        onTap: () => _searchResultsNotifier.updateSuggestionsVisibility = false,
       ),
       child: PortalTarget(
-        visible: _isOverlayVisible,
+        visible: _searchResultsNotifier.isSuggestionsVisible,
         anchor: const Aligned(
-          follower: Alignment.bottomRight,
-          target: Alignment.topRight,
+          target: Alignment.bottomRight,
+          follower: Alignment.topRight,
         ),
         portalFollower: ListenableBuilder(
           listenable: _searchResultsNotifier,
           builder: (context, child) => UnconstrainedBox(
             child: Container(
-              color: Colors.red,
+              padding: _data.padding,
+              margin: _data.margin,
+              decoration: _data.decoration,
               width: _textFormFieldWidth,
               constraints: const BoxConstraints(
                 maxHeight: 300,
@@ -114,7 +103,15 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: _searchResultsNotifier.widgets,
+                  children: _searchResultsNotifier.widgets
+                      .map(
+                        (item) => GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => _searchResultsNotifier.selectValue(item.item),
+                          child: item.builder(context, item.item),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             ),
@@ -123,6 +120,7 @@ class _SearchableDropdownFieldState extends State<SearchableDropdownField> {
         child: TextFormField(
           key: _textFormFieldKey,
           controller: _textController,
+          readOnly: _searchResultsNotifier.selectedValue != null,
           decoration: const InputDecoration(
             hintText: 'Search',
             border: OutlineInputBorder(),
